@@ -11,8 +11,18 @@ export default class Kwai extends TaroPlatformBase {
         script: string;
     };
     template: Template;
+    projectConfigJson: string;
     /**
-     * 调用 mini-runner 开启编译
+     * 1. setupTransaction - init
+     * 2. setup
+     * 3. setupTransaction - close
+     * 4. buildTransaction - init
+     * 5. build
+     * 6. buildTransaction - close
      */
-    start(): Promise<void>;
+    constructor(ctx: any, config: any);
+    /**
+     * 增加组件或修改组件属性
+     */
+    modifyTemplate(): void;
 }
