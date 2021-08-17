@@ -17,7 +17,7 @@ export default class Kwai extends TaroPlatformBase {
 
   template = new Template()
   // 小程序配置文件名称
-  projectConfigJson = 'project.config.json'
+  projectConfigJson = 'project.kwai.json'
 
   /**
    * 1. setupTransaction - init

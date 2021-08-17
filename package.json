@@ -27,9 +27,9 @@
     "url": "https://github.com/NervJS/taro-plugin-platform-kwai/issues"
   },
   "dependencies": {
-    "@tarojs/components": "3.2.15",
-    "@tarojs/service": "3.2.15",
-    "@tarojs/shared": "3.2.15"
+    "@tarojs/components": "3.2.9",
+    "@tarojs/service": "3.2.9",
+    "@tarojs/shared": "3.2.9"
   },
   "devDependencies": {
     "rollup": "^2.29.0",
