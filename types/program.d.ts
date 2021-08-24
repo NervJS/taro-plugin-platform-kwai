@@ -4,6 +4,8 @@ export default class Kwai extends TaroPlatformBase {
     platform: string;
     globalObject: string;
     runtimePath: string;
+    taroComponentsPath: string;
+    projectConfigJson: string;
     fileType: {
         templ: string;
         style: string;
@@ -11,7 +13,6 @@ export default class Kwai extends TaroPlatformBase {
         script: string;
     };
     template: Template;
-    projectConfigJson: string;
     /**
      * 1. setupTransaction - init
      * 2. setup

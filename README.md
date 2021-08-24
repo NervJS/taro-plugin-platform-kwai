@@ -42,3 +42,11 @@ if (process.TARO_ENV === 'kwai') {
 ```js
 Taro.getSelectedTextRange()
 ```
+
+## 注意
+
+* cover-view 只能嵌套5层,子元素只能是 文本/cover-view/cover-image
+* cover-view 样式有些不支持,等待快手修复,line-height border-radius
+* cover-image 不支持嵌套子元素
+* 部分 api 未 promise 化
+* 组件属性还未完全支持,参考[taro-plugin-inject](https://github.com/NervJS/taro-plugin-inject)进行添加,或者issue pr
