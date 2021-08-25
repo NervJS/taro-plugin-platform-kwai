@@ -65,13 +65,19 @@ export class Template extends RecursiveTemplate {
         ${this.coverViewTemplate(5)}`
       }
 
+      if(nodeName ==='input'){
+        return `${acc}
+        <${nodeName} ks:if="{{i.nn=='input'}}" ${attributesStr} id="{{i.uid}}" />`
+      }
+
       return `${acc}
       <${nodeName} ks:if="{{i.nn=='${item}'}}" ${attributesStr} id="{{i.uid}}">
-       ${nodeName == 'input' ? '' : '<template is="taro_tmpl" data="{{root:i}}" />'}  
+        <template is="taro_tmpl" data="{{root:i}}" />
       </${nodeName}>`
+
     }, `<block ks:if="{{i.nn=='#text'}}">
-      {{i.v}}
-            </block>`)
+          {{i.v}}
+        </block>`)
 
     return `<template name="taro_tmpl">
               <block ${Adapter.for}="{{root.cn}}" ${Adapter.key}="uid" ks:for-item="i">
