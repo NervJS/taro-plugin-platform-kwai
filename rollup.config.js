@@ -54,4 +54,4 @@ const otherConfig = {
   ...base
 }
 
-module.exports = [comileConfig, runtimeConfig, runtimeUtilsConfig,otherConfig]
+module.exports = [comileConfig, runtimeConfig, runtimeUtilsConfig, otherConfig]

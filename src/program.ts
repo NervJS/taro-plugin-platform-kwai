@@ -8,7 +8,6 @@ export default class Kwai extends TaroPlatformBase {
   platform = 'kwai'
   globalObject = 'ks'
   runtimePath = `${PACKAGE_NAME}/dist/runtime`
-  taroComponentsPath = `${PACKAGE_NAME}/dist/components-react`
   projectConfigJson = 'project.ks.json'
   fileType = {
     templ: '.ksml',
