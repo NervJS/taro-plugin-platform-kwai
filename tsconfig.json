@@ -1,27 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "ES2015",
-    "rootDir": "./src",
-    "outDir": "dist",
-    "sourceMap": true,
-    "baseUrl": ".",
+    "target": "ES2015",
     "noImplicitAny": false,
-    "noUnusedLocals": true,
-    "removeComments": false,
     "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "removeComments": false,
+    "baseUrl": ".",
+    "module": "ESNext",
+    "sourceMap": true,
     "declaration": true,
     "declarationDir": "types"
   },
   "include": [
     "./src"
-  ],
-  "exclude": [
-    "**/*.test.ts",
-    "**/*.spec.ts"
-  ],
-  "compileOnSave": false
+  ]
 }

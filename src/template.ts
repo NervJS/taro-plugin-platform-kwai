@@ -1,7 +1,6 @@
-import { UnRecursiveTemplate } from '@tarojs/shared/dist/template'
-import type { IOptions } from './index'
-export class Template extends UnRecursiveTemplate {
-  pluginOptions: IOptions
+import { RecursiveTemplate } from '@tarojs/shared/dist/template'
+
+export class Template extends RecursiveTemplate {
   supportXS = false
   Adapter = {
     if: 'ks:if',
@@ -14,61 +13,131 @@ export class Template extends UnRecursiveTemplate {
     type: 'kwai'
   }
 
-  constructor (pluginOptions: IOptions) {
-    super()
-    this.pluginOptions = pluginOptions || {}
+
+  modifyLoopContainer = (children: string, nodeName: string) => {
+    return ``
+  }
+  modifyLoopBody = (child: string, nodeName: string) => {
+    return ''
+  }
+  modifyTemplateResult = (res: string, nodeName: string) => {
+    return ''
   }
 
-  replacePropName (name: string, value: string, componentName: string) {
-    if (value === 'eh') {
-      const nameLowerCase = name.toLowerCase()
-      if (nameLowerCase === 'bindlongtap' && componentName !== 'canvas') return 'bindlongpress'
-      return nameLowerCase
+  buildBaseTemplate() {
+    const Adapter = this.Adapter
+
+    if (!this.miniComponents) {
+      this.miniComponents = this.createMiniComponents(this.internalComponents)
     }
-    return name
-  }
 
-  buildXSTepFocus (nn: string) {
-    if (this.pluginOptions.enablekeyboardAccessory) {
-      return `function(i, prefix) {
-      var s = i.focus !== undefined ? 'focus' : 'blur'
-      var r = prefix + i.${nn} + '_' + s
-      if (i.nn === 'textarea' && i.cn[0] && i.cn[0].nn === 'keyboard-accessory') {
-        r = r + '_ka'
+
+
+    const child = Object.keys(this.miniComponents).reduce((acc, item) => {
+
+      let nodeName = ''
+      switch (item) {
+        case 'slot':
+        case 'slot-view':
+        case 'catch-view':
+        case 'static-view':
+        case 'pure-view':
+          nodeName = 'view'
+          break
+        case 'static-text':
+          nodeName = 'text'
+          break
+        case 'static-image':
+          nodeName = 'image'
+          break
+        default:
+          nodeName = item
+          break
       }
-      return r
-    }`
-    } else {
-      return super.buildXSTepFocus(nn)
-    }
+      const componentRecord = this.miniComponents[item]
+
+      const attributesStr = Object.keys(componentRecord)
+        .map(item => `${item}="${item.startsWith('bind') || item.startsWith('on') || item.startsWith('catch') ? componentRecord[item] : `{{${componentRecord[item]}}}`}" `)
+        .join('')
+
+      if (nodeName == 'cover-view') {
+        return `${acc}
+        ${this.coverViewTemplate(5)}`
+      }
+
+      if(nodeName ==='input'){
+        return `${acc}
+        <${nodeName} ks:if="{{i.nn=='input'}}" ${attributesStr} id="{{i.uid}}" />`
+      }
+
+      return `${acc}
+      <${nodeName} ks:if="{{i.nn=='${item}'}}" ${attributesStr} id="{{i.uid}}">
+        <template is="taro_tmpl" data="{{root:i}}" />
+      </${nodeName}>`
+
+    }, `<block ks:if="{{i.nn=='#text'}}">
+          {{i.v}}
+        </block>`)
+
+    return `<template name="taro_tmpl">
+              <block ${Adapter.for}="{{root.cn}}" ${Adapter.key}="uid" ks:for-item="i">
+               ${child}
+              </block>
+            </template>`
   }
 
-  modifyTemplateResult = (res: string, nodeName: string, _level, children) => {
-    if (nodeName === 'keyboard-accessory') return ''
-
-    if (nodeName === 'textarea' && this.pluginOptions.enablekeyboardAccessory) {
-      const list = res.split('</template>')
-
-      const target = `
-    <keyboard-accessory style="{{i.cn[0].st}}" class="{{i.cn[0].cl}}" bindtap="eh"  id="{{i.cn[0].uid}}">
-      <block wx:for="{{i.cn[0].cn}}" wx:key="uid">
-        <template is="{{xs.e(cid+1)}}" data="{{i:item,l:l}}" />
+  /**
+   * cover-view 无法包含 template
+   * 
+   * 无法使用递归模版
+   */
+  coverViewTemplate(loop: number) {
+    const itemContext = `cover${loop}`
+    return `
+    <cover-view ks:if="{{i.nn=='cover-view'}}" scroll-top="{{i.scrollTop===undefined?false:i.scrollTop}}" bindtouchstart="eh" bindtouchmove="eh" bindtouchend="eh" bindtouchcancel="eh" bindlongtap="eh" style="{{i.st}}" class="{{i.cl}}" bindtap="eh"  id="{{i.uid}}">
+      <block ks:for="{{i.cn}}" ks:for-item="${itemContext}">
+          <block ks:if="{{${itemContext}.nn=='#text'}}">
+              {{${itemContext}.v}}
+          </block>
+          <cover-view id="{{${itemContext}.uid}}" ks:if="{{${itemContext}.nn=='cover-view'}}" ${this.buildNodeAttr('cover-view', itemContext)}>${loop > 0 ? this.createCoverViewLoopTemplate(loop - 1) : ''}</cover-view > 
+          <cover-image id="{{${itemContext}.uid}}" ks:if="{{${itemContext}.nn=='cover-image'}}" ${this.buildNodeAttr('cover-image', itemContext)}> </cover-image > 
       </block>
-    </keyboard-accessory>
-  `
+    </cover-view>
+    `
+  }
 
-      const templateFocus = list[1]
-        .replace(children, target)
-        .replace('_textarea_focus', '_textarea_focus_ka')
+  createCoverViewLoopTemplate(loop: number) {
 
-      const templateBlur = list[2]
-        .replace(children, target)
-        .replace('_textarea_blur', '_textarea_blur_ka')
+    const preItemContext = `cover${loop + 1}`
+    const itemContext = `cover${loop}`
 
-      list.splice(3, 0, templateFocus, templateBlur)
-      return list.join('</template>')
+    return `
+    <block ks:for="{{${preItemContext}.cn}}" ks:for-item="${itemContext}">
+        <block ks:if="{{${itemContext}.nn=='#text'}}">
+            {{${itemContext}.v}}
+        </block>
+        <cover-view id="{{${itemContext}.uid}}" ks:if="{{${itemContext}.nn=='cover-view'}}" ${this.buildNodeAttr('cover-view', itemContext)}>${loop > 0 ? this.createCoverViewLoopTemplate(loop - 1) : ''}</cover-view > 
+        <cover-image id="{{${itemContext}.uid}}" ks:if="{{${itemContext}.nn=='cover-image'}}" ${this.buildNodeAttr('cover-image', itemContext)}> </cover-image > 
+    </block>
+    `
+  }
+
+  /**
+   * 默认返回 ```class="{{i.cl}}" style="{{i.sl}}"```
+   * 
+   * @example itemContext='item'
+   * class="{{i.cl}}" => class="{{item.cl}}"
+   * 
+   */
+  buildNodeAttr(nodeName: string, itemContext?: string) {
+    if (!this.miniComponents) {
+      this.miniComponents = this.createMiniComponents(this.internalComponents)
     }
 
-    return res
+    const componentRecord = this.miniComponents[nodeName]
+
+    return Object.keys(componentRecord)
+      .map(item => `${item}="${item.startsWith('bind') || item.startsWith('on') || item.startsWith('catch') ? componentRecord[item] : `{{${itemContext ? componentRecord[item].replaceAll('i.', `${itemContext}.`) : componentRecord[item]}}}`}" `)
+      .join('')
   }
 }
