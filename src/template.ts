@@ -1,6 +1,8 @@
+import { indent } from '@tarojs/shared'
 import { RecursiveTemplate } from '@tarojs/shared/dist/template'
 
 export class Template extends RecursiveTemplate {
+  flattenCoverViewLevel = 8
   supportXS = false
   Adapter = {
     if: 'ks:if',
@@ -13,131 +15,37 @@ export class Template extends RecursiveTemplate {
     type: 'kwai'
   }
 
+  buildFlattenNodeAttributes (nodeName: string): string {
+    const component = this.miniComponents[nodeName]
 
-  modifyLoopContainer = (children: string, nodeName: string) => {
-    return ``
-  }
-  modifyLoopBody = (child: string, nodeName: string) => {
-    return ''
-  }
-  modifyTemplateResult = (res: string, nodeName: string) => {
-    return ''
+    return Object.keys(component)
+      .map(k => `${k}="${k.startsWith('bind') || k.startsWith('on') || k.startsWith('catch') ? component[k] : `{{${component[k].replace('i.', 'item.')}}}`}"`)
+      .join(' ') + ' id="{{item.uid}}"'
   }
 
-  buildBaseTemplate() {
-    const Adapter = this.Adapter
-
-    if (!this.miniComponents) {
-      this.miniComponents = this.createMiniComponents(this.internalComponents)
+  buildFlattenCoverView = (level = this.flattenCoverViewLevel): string => {
+    if (level === 0) {
+      return ''
     }
 
+    const child = this.buildFlattenCoverView(level - 1)
 
+    const template =
+  `${level - 1 !== 0 ? `<cover-view ks:if="{{item.nn==='cover-view'}}" ${this.buildFlattenNodeAttributes('cover-view')}>
+  <block ks:for="{{item.cn}}" ks:key="uid">
+    ${indent(child, 4)}
+  </block>
+</cover-view>` : ''}
+<cover-image ks:elif="{{item.nn==='cover-image'}}"  ${this.buildFlattenNodeAttributes('cover-image')} />
+<block ks:elif="{{item.nn==='#text'}}">{{item.v}}</block>`
 
-    const child = Object.keys(this.miniComponents).reduce((acc, item) => {
-
-      let nodeName = ''
-      switch (item) {
-        case 'slot':
-        case 'slot-view':
-        case 'catch-view':
-        case 'static-view':
-        case 'pure-view':
-          nodeName = 'view'
-          break
-        case 'static-text':
-          nodeName = 'text'
-          break
-        case 'static-image':
-          nodeName = 'image'
-          break
-        default:
-          nodeName = item
-          break
-      }
-      const componentRecord = this.miniComponents[item]
-
-      const attributesStr = Object.keys(componentRecord)
-        .map(item => `${item}="${item.startsWith('bind') || item.startsWith('on') || item.startsWith('catch') ? componentRecord[item] : `{{${componentRecord[item]}}}`}" `)
-        .join('')
-
-      if (nodeName == 'cover-view') {
-        return `${acc}
-        ${this.coverViewTemplate(5)}`
-      }
-
-      if(nodeName ==='input'){
-        return `${acc}
-        <${nodeName} ks:if="{{i.nn=='input'}}" ${attributesStr} id="{{i.uid}}" />`
-      }
-
-      return `${acc}
-      <${nodeName} ks:if="{{i.nn=='${item}'}}" ${attributesStr} id="{{i.uid}}">
-        <template is="taro_tmpl" data="{{root:i}}" />
-      </${nodeName}>`
-
-    }, `<block ks:if="{{i.nn=='#text'}}">
-          {{i.v}}
-        </block>`)
-
-    return `<template name="taro_tmpl">
-              <block ${Adapter.for}="{{root.cn}}" ${Adapter.key}="uid" ks:for-item="i">
-               ${child}
-              </block>
-            </template>`
+    return template
   }
 
-  /**
-   * cover-view 无法包含 template
-   * 
-   * 无法使用递归模版
-   */
-  coverViewTemplate(loop: number) {
-    const itemContext = `cover${loop}`
-    return `
-    <cover-view ks:if="{{i.nn=='cover-view'}}" scroll-top="{{i.scrollTop===undefined?false:i.scrollTop}}" bindtouchstart="eh" bindtouchmove="eh" bindtouchend="eh" bindtouchcancel="eh" bindlongtap="eh" style="{{i.st}}" class="{{i.cl}}" bindtap="eh"  id="{{i.uid}}">
-      <block ks:for="{{i.cn}}" ks:for-item="${itemContext}">
-          <block ks:if="{{${itemContext}.nn=='#text'}}">
-              {{${itemContext}.v}}
-          </block>
-          <cover-view id="{{${itemContext}.uid}}" ks:if="{{${itemContext}.nn=='cover-view'}}" ${this.buildNodeAttr('cover-view', itemContext)}>${loop > 0 ? this.createCoverViewLoopTemplate(loop - 1) : ''}</cover-view > 
-          <cover-image id="{{${itemContext}.uid}}" ks:if="{{${itemContext}.nn=='cover-image'}}" ${this.buildNodeAttr('cover-image', itemContext)}> </cover-image > 
-      </block>
-    </cover-view>
-    `
-  }
-
-  createCoverViewLoopTemplate(loop: number) {
-
-    const preItemContext = `cover${loop + 1}`
-    const itemContext = `cover${loop}`
-
-    return `
-    <block ks:for="{{${preItemContext}.cn}}" ks:for-item="${itemContext}">
-        <block ks:if="{{${itemContext}.nn=='#text'}}">
-            {{${itemContext}.v}}
-        </block>
-        <cover-view id="{{${itemContext}.uid}}" ks:if="{{${itemContext}.nn=='cover-view'}}" ${this.buildNodeAttr('cover-view', itemContext)}>${loop > 0 ? this.createCoverViewLoopTemplate(loop - 1) : ''}</cover-view > 
-        <cover-image id="{{${itemContext}.uid}}" ks:if="{{${itemContext}.nn=='cover-image'}}" ${this.buildNodeAttr('cover-image', itemContext)}> </cover-image > 
-    </block>
-    `
-  }
-
-  /**
-   * 默认返回 ```class="{{i.cl}}" style="{{i.sl}}"```
-   * 
-   * @example itemContext='item'
-   * class="{{i.cl}}" => class="{{item.cl}}"
-   * 
-   */
-  buildNodeAttr(nodeName: string, itemContext?: string) {
-    if (!this.miniComponents) {
-      this.miniComponents = this.createMiniComponents(this.internalComponents)
+  modifyLoopBody = (child: string, nodeName: string): string => {
+    if (nodeName === 'cover-view') {
+      return this.buildFlattenCoverView()
     }
-
-    const componentRecord = this.miniComponents[nodeName]
-
-    return Object.keys(componentRecord)
-      .map(item => `${item}="${item.startsWith('bind') || item.startsWith('on') || item.startsWith('catch') ? componentRecord[item] : `{{${itemContext ? componentRecord[item].replaceAll('i.', `${itemContext}.`) : componentRecord[item]}}}`}" `)
-      .join('')
+    return child
   }
 }

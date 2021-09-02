@@ -1,10 +1,21 @@
 import { singleQuote } from '@tarojs/shared'
 
 export const components = {
-    RichText: {
-        nodes: singleQuote('')
-    },
-    Ad:{
-        type:singleQuote('0')
-    }
+  // ======== 调整属性 ========
+  Button: {
+    bindGetPhoneNumber: ''
+  },
+  Slider: {
+    color: singleQuote('#e9e9e9'),
+    'selected-color': singleQuote('#1aad19')
+  },
+  Ad: {
+    type: ''
+  },
+  Swiper: {
+    'easing-function': singleQuote('default'),
+  },
+  RichText: {
+    space: ''
+  }
 }

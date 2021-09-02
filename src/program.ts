@@ -40,6 +40,20 @@ export default class Kwai extends TaroPlatformBase {
    * 增加组件或修改组件属性
    */
   modifyTemplate () {
-    this.template.mergeComponents(this.ctx, components)
+    const template = this.template
+    template.mergeComponents(this.ctx, components)
+    this.modifyInput(template.internalComponents.Input)
+  }
+
+  /**
+   * 修改 Input 组件属性
+   */
+  modifyInput (input) {
+    delete input['placeholder-class']
+    delete input['cursor-spacing']
+    delete input['confirm-hold']
+    delete input['cursor']
+    delete input['selection-start']
+    delete input['selection-end']
   }
 }
