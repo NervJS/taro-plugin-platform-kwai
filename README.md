@@ -1,11 +1,20 @@
 # `@tarojs/plugin-platform-kwai`
 
-> 版本要求
-> Taro 3.3：可以使用本插件的 1.0 或以上版本
-> Taro 3.2：请使用 [taro-plugin-platform-ks](https://github.com/vadxq/taro-plugin-platform-ks) 的 1.2.x 版本
-> Taro 3.0 - 3.1：请使用 [taro-plugin-platform-ks](https://github.com/vadxq/taro-plugin-platform-ks) 的 1.0.x 版本
-
 Taro 插件。用于支持编译为快手小程序。
+
+## 版本要求
+
+### Taro 3.3+
+
+请使用本插件的 1.0 或以上版本
+
+### Taro 3.2
+
+请使用 [taro-plugin-platform-ks](https://github.com/vadxq/taro-plugin-platform-ks) 的 1.2.x 版本
+
+### 3. Taro 3.0 - 3.1
+
+请使用 [taro-plugin-platform-ks](https://github.com/vadxq/taro-plugin-platform-ks) 的 1.0.x 版本
 
 ## 使用
 
