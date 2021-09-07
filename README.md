@@ -12,7 +12,7 @@ Taro 插件。用于支持编译为快手小程序。
 
 请使用 [taro-plugin-platform-ks](https://github.com/vadxq/taro-plugin-platform-ks) 的 1.2.x 版本
 
-### Taro 3.0 - 3.1
+### Taro 3.1
 
 请使用 [taro-plugin-platform-ks](https://github.com/vadxq/taro-plugin-platform-ks) 的 1.0.x 版本
 
