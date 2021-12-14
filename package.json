@@ -1,6 +1,6 @@
 {
   "name": "@tarojs/plugin-platform-kwai",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "快手小程序平台插件",
   "author": "drchan",
   "homepage": "https://github.com/NervJS/taro-plugin-platform-kwai",
