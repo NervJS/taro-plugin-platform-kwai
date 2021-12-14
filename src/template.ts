@@ -2,6 +2,7 @@ import { indent, Shortcuts } from '@tarojs/shared'
 import { RecursiveTemplate } from '@tarojs/shared/dist/template'
 
 export class Template extends RecursiveTemplate {
+  flattenViewLevel = 8
   flattenCoverViewLevel = 8
   flattenTextLevel = 3
   supportXS = false
@@ -16,12 +17,62 @@ export class Template extends RecursiveTemplate {
     type: 'kwai'
   }
 
+  createMiniComponents (components): any {
+    const result = super.createMiniComponents(components)
+
+    delete result['pure-view']
+    delete result['static-view']
+
+    return result
+  }
+
   buildFlattenNodeAttributes (nodeName: string): string {
     const component = this.miniComponents[nodeName]
 
     return Object.keys(component)
       .map(k => `${k}="${k.startsWith('bind') || k.startsWith('on') || k.startsWith('catch') ? component[k] : `{{${component[k].replace('i.', 'item.')}}}`}"`)
       .join(' ') + ' id="{{item.uid}}"'
+  }
+
+  buildFlattenView = (level = this.flattenViewLevel): string => {
+    if (level === 0) {
+      return '<template is="tmpl_0_container" data="{{i:item}}" />'
+    }
+
+    const child = this.buildFlattenView(level - 1)
+
+    const template =
+`<view ks:if="{{item.nn==='view'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('view')}>
+  <block ks:for="{{item.cn}}" ks:key="uid">
+    ${indent(child, 4)}
+  </block>
+</view>
+<text ks:elif="{{item.nn==='text'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('text')}>
+  <block ks:for="{{item.cn}}" ks:key="uid">
+    <block>{{item.v}}</block>
+  </block>
+</text>
+<text ks:elif="{{item.nn==='static-text'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('static-text')}>
+  <block ks:for="{{item.cn}}" ks:key="uid">
+    <block>{{item.v}}</block>
+  </block>
+</text>
+<button ks:elif="{{item.nn==='button'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('button')}>
+  <block ks:for="{{item.cn}}" ks:key="uid">
+    <template is="tmpl_0_container" data="{{i:item}}" />
+  </block>
+</button>
+<input ks:elif="{{item.nn==='input'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('input')} />
+<swiper ks:elif="{{item.nn==='swiper'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('swiper')}>
+  <block ks:for="{{item.cn}}" ks:key="uid">
+    <template is="tmpl_0_container" data="{{i:item}}" />
+  </block>
+</swiper>
+<block ks:else>
+  <template is="tmpl_0_container" data="{{i:item}}" />
+</block>`
+
+    return template
   }
 
   buildFlattenCoverView = (level = this.flattenCoverViewLevel): string => {
@@ -60,11 +111,19 @@ export class Template extends RecursiveTemplate {
   }
 
   modifyLoopBody = (child: string, nodeName: string): string => {
-    if (nodeName === 'cover-view') {
-      return this.buildFlattenCoverView()
-    } else if (nodeName === 'static-text' || nodeName === 'text') {
-      return this.buildFlattenText()
+    switch (nodeName) {
+      case 'view':
+        return this.buildFlattenView()
+
+      case 'text':
+      case 'static-text':
+        return this.buildFlattenText()
+
+      case 'cover-view':
+        return this.buildFlattenCoverView()
+
+      default:
+        return child
     }
-    return child
   }
 }
