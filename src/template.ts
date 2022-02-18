@@ -31,7 +31,7 @@ export class Template extends RecursiveTemplate {
 
     return Object.keys(component)
       .map(k => `${k}="${k.startsWith('bind') || k.startsWith('on') || k.startsWith('catch') ? component[k] : `{{${component[k].replace('i.', 'item.')}}}`}"`)
-      .join(' ') + ' id="{{item.uid}}"'
+      .join(' ') + ' id="{{item.uid||item.sid}}" data-sid="{{item.sid}}"'
   }
 
   buildFlattenView = (level = this.flattenViewLevel): string => {
