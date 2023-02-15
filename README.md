@@ -38,7 +38,11 @@ module.exports = {
 }
 ```
 
-#### 2. 编译为快手小程序
+#### 2. 根目录添加配置文件 `project.ks.json`
+
+内容请参考快手小程序的 `project.config.json` 配置。
+
+#### 3. 编译为快手小程序
 
 ```shell
 taro build --type kwai

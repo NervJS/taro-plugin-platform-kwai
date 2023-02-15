@@ -8,7 +8,6 @@ export default class Kwai extends TaroPlatformBase {
   platform = 'kwai'
   globalObject = 'ks'
   runtimePath = `${PACKAGE_NAME}/dist/runtime`
-  projectConfigJson = 'project.ks.json'
   fileType = {
     templ: '.ksml',
     style: '.css',
@@ -32,6 +31,8 @@ export default class Kwai extends TaroPlatformBase {
     this.setupTransaction.addWrapper({
       close () {
         this.modifyTemplate()
+        this.generateProjectConfig('project.ks.json')
+        this.generateProjectConfig('project.kwai.json')
       }
     })
   }
