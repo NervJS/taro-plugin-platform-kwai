@@ -41,29 +41,37 @@ export class Template extends RecursiveTemplate {
 
     const child = this.buildFlattenView(level - 1)
 
+    const componentsAlias = this.componentsAlias
+    const viewAlias = componentsAlias.view._num
+    const textAlias = componentsAlias.text._num
+    const staticTextAlias = componentsAlias['static-text']._num
+    const buttonAlias = componentsAlias.button._num
+    const inputAlias = componentsAlias.input._num
+    const swiperAlias = componentsAlias.swiper._num
+
     const template =
-`<view ks:if="{{item.nn==='view'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('view')}>
+`<view ks:if="{{item.nn==='${viewAlias}'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('view')}>
   <block ks:for="{{item.cn}}" ks:key="uid">
     ${indent(child, 4)}
   </block>
 </view>
-<text ks:elif="{{item.nn==='text'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('text')}>
+<text ks:elif="{{item.nn==='${textAlias}'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('text')}>
   <block ks:for="{{item.cn}}" ks:key="uid">
     <block>{{item.v}}</block>
   </block>
 </text>
-<text ks:elif="{{item.nn==='static-text'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('static-text')}>
+<text ks:elif="{{item.nn==='${staticTextAlias}'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('static-text')}>
   <block ks:for="{{item.cn}}" ks:key="uid">
     <block>{{item.v}}</block>
   </block>
 </text>
-<button ks:elif="{{item.nn==='button'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('button')}>
+<button ks:elif="{{item.nn==='${buttonAlias}'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('button')}>
   <block ks:for="{{item.cn}}" ks:key="uid">
     <template is="tmpl_0_container" data="{{i:item}}" />
   </block>
 </button>
-<input ks:elif="{{item.nn==='input'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('input')} />
-<swiper ks:elif="{{item.nn==='swiper'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('swiper')}>
+<input ks:elif="{{item.nn==='${inputAlias}'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('input')} />
+<swiper ks:elif="{{item.nn==='${swiperAlias}'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('swiper')}>
   <block ks:for="{{item.cn}}" ks:key="uid">
     <template is="tmpl_0_container" data="{{i:item}}" />
   </block>
@@ -82,14 +90,19 @@ export class Template extends RecursiveTemplate {
 
     const child = this.buildFlattenCoverView(level - 1)
 
+    const componentsAlias = this.componentsAlias
+    const coverViewAlias = componentsAlias['cover-view']._num
+    const coverImageAlias = componentsAlias['cover-image']._num
+    const contentAlias = componentsAlias['#text']._num
+
     const template =
-  `${level - 1 !== 0 ? `<cover-view ks:if="{{item.nn==='cover-view'}}" ${this.buildFlattenNodeAttributes('cover-view')}>
+  `${level - 1 !== 0 ? `<cover-view ks:if="{{item.nn==='${coverViewAlias}'}}" ${this.buildFlattenNodeAttributes('cover-view')}>
   <block ks:for="{{item.cn}}" ks:key="uid">
     ${indent(child, 4)}
   </block>
 </cover-view>` : ''}
-<cover-image ks:elif="{{item.nn==='cover-image'}}"  ${this.buildFlattenNodeAttributes('cover-image')} />
-<block ks:elif="{{item.nn==='#text'}}">{{item.v}}</block>`
+<cover-image ks:elif="{{item.nn==='${coverImageAlias}'}}"  ${this.buildFlattenNodeAttributes('cover-image')} />
+<block ks:elif="{{item.nn==='${contentAlias}'}}">{{item.v}}</block>`
 
     return template
   }
@@ -101,8 +114,11 @@ export class Template extends RecursiveTemplate {
 
     const child = this.buildFlattenText(level - 1)
 
+    const componentsAlias = this.componentsAlias
+    const contentAlias = componentsAlias['#text']._num
+
     const template =
-`<block ks:if="item.nn === '#text'">{{item.v}}</block><text ks:else id="{{item.uid}}" ${this.buildFlattenNodeAttributes('text')}>
+`<block ks:if="item.nn === '${contentAlias}'">{{item.v}}</block><text ks:else id="{{item.uid}}" ${this.buildFlattenNodeAttributes('text')}>
   <block ks:for="{{item.cn}}" ks:key="uid">
     ${indent(child, 4)}
   </block>
