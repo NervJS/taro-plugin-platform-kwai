@@ -93,6 +93,7 @@ export class Template extends RecursiveTemplate {
     const componentsAlias = this.componentsAlias
     const coverViewAlias = componentsAlias['cover-view']._num
     const coverImageAlias = componentsAlias['cover-image']._num
+    const buttonAlias = componentsAlias.button._num
     const contentAlias = componentsAlias['#text']._num
 
     const template =
@@ -101,7 +102,12 @@ export class Template extends RecursiveTemplate {
     ${indent(child, 4)}
   </block>
 </cover-view>` : ''}
-<cover-image ks:elif="{{item.nn==='${coverImageAlias}'}}"  ${this.buildFlattenNodeAttributes('cover-image')} />
+<button ks:elif="{{item.nn==='${buttonAlias}'}}" ${this.buildFlattenNodeAttributes('button')} >
+  <block ks:for="{{item.cn}}" ks:key="uid">
+    <template is="tmpl_0_container" data="{{i:item}}" />
+  </block>
+</button>
+<cover-image ks:elif="{{item.nn==='${coverImageAlias}'}}" ${this.buildFlattenNodeAttributes('cover-image')} />
 <block ks:elif="{{item.nn==='${contentAlias}'}}">{{item.v}}</block>`
 
     return template
