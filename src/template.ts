@@ -36,7 +36,7 @@ export class Template extends RecursiveTemplate {
 
   buildFlattenView = (level = this.flattenViewLevel): string => {
     if (level === 0) {
-      return '<template is="tmpl_0_container" data="{{i:item}}" />'
+      return `<template is="{{'tmpl_0_' + item.nn}}" data="{{i:item}}" />`
     }
 
     const child = this.buildFlattenView(level - 1)
@@ -67,17 +67,17 @@ export class Template extends RecursiveTemplate {
 </text>
 <button ks:elif="{{item.nn==='${buttonAlias}'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('button')}>
   <block ks:for="{{item.cn}}" ks:key="uid">
-    <template is="tmpl_0_container" data="{{i:item}}" />
+    <template is="{{'tmpl_0_' + item.nn}}" data="{{i:item}}" />
   </block>
 </button>
 <input ks:elif="{{item.nn==='${inputAlias}'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('input')} />
 <swiper ks:elif="{{item.nn==='${swiperAlias}'&&(item.st||item.cl)}}" id="{{item.uid}}" ${this.buildFlattenNodeAttributes('swiper')}>
   <block ks:for="{{item.cn}}" ks:key="uid">
-    <template is="tmpl_0_container" data="{{i:item}}" />
+    <template is="{{'tmpl_0_' + item.nn}}" data="{{i:item}}" />
   </block>
 </swiper>
 <block ks:else>
-  <template is="tmpl_0_container" data="{{i:item}}" />
+  <template is="{{'tmpl_0_' + item.nn}}" data="{{i:item}}" />
 </block>`
 
     return template
@@ -104,7 +104,7 @@ export class Template extends RecursiveTemplate {
 </cover-view>` : ''}
 <button ks:elif="{{item.nn==='${buttonAlias}'}}" ${this.buildFlattenNodeAttributes('button')} >
   <block ks:for="{{item.cn}}" ks:key="uid">
-    <template is="tmpl_0_container" data="{{i:item}}" />
+    <template is="{{'tmpl_0_' + item.nn}}" data="{{i:item}}" />
   </block>
 </button>
 <cover-image ks:elif="{{item.nn==='${coverImageAlias}'}}" ${this.buildFlattenNodeAttributes('cover-image')} />
