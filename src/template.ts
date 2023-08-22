@@ -30,7 +30,7 @@ export class Template extends RecursiveTemplate {
     const component = this.miniComponents[nodeName]
 
     return Object.keys(component)
-      .map(k => `${k}="${k.startsWith('bind') || k.startsWith('on') || k.startsWith('catch') ? component[k] : `{{${component[k].replace('i.', 'item.')}}}`}"`)
+      .map(k => `${k}="${k.startsWith('bind') || k.startsWith('on') || k.startsWith('catch') ? component[k] : `{{${component[k].replace(/i./g, 'item.')}}}`}"`)
       .join(' ') + ' id="{{item.uid||item.sid}}" data-sid="{{item.sid}}"'
   }
 
