@@ -28,10 +28,21 @@ export const components = {
     space: ''
   },
   Textarea: {
-    'adjust-position': _true,
+    name: _empty,
+
     value: _empty,
-    'hold-keyboard': _false,
+    maxlength: 140,
+    disabled: _false,
+    placeholder: _empty,
+    'placeholder-style': _empty,
+    'auto-focus': _false,
+    focus: _false,
+    fixed: _false,
+    'cursor-color': "'#FE3666'",
+    'auto-height': _false,
     'confirm-type': "'return'",
+    'adjust-position': _true,
+    'hold-keyboard': _false,
     'confirm-hold': _false,
     bindKeyboardHeightChange: _empty
   }
