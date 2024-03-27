@@ -1,4 +1,8 @@
-import { singleQuote } from '@tarojs/shared'
+import { singleQuote } from '@tarojs/shared';
+
+const _true = 'true';
+const _false = 'false';
+const _empty = '';
 
 export const components = {
   // ======== 调整属性 ========
@@ -8,7 +12,7 @@ export const components = {
     bindContact: '',
     bindError: '',
     bindOpenSetting: '',
-    bindLaunchApp: '',
+    bindLaunchApp: ''
   },
   Slider: {
     color: singleQuote('#e9e9e9'),
@@ -18,9 +22,17 @@ export const components = {
     type: ''
   },
   Swiper: {
-    'easing-function': singleQuote('default'),
+    'easing-function': singleQuote('default')
   },
   RichText: {
     space: ''
+  },
+  Textarea: {
+    'adjust-position': _true,
+    value: _empty,
+    'hold-keyboard': _false,
+    'confirm-type': "'return'",
+    'confirm-hold': _false,
+    bindKeyboardHeightChange: _empty
   }
-}
+};
