@@ -1,6 +1,6 @@
 {
   "name": "@tarojs/plugin-platform-kwai",
-  "version": "6.0.1",
+  "version": "7.0.0",
   "description": "快手小程序平台插件",
   "author": "drchan",
   "homepage": "https://github.com/NervJS/taro-plugin-platform-kwai",
@@ -27,16 +27,16 @@
     "url": "https://github.com/NervJS/taro-plugin-platform-kwai/issues"
   },
   "peerDependencies": {
-    "@tarojs/components": "^3.5.0",
-    "@tarojs/service": "^3.5.0",
-    "@tarojs/shared": "^3.5.0"
+    "@tarojs/components": "^4.0.0",
+    "@tarojs/service": "^4.0.0",
+    "@tarojs/shared": "^4.0.0"
   },
   "devDependencies": {
-    "@tarojs/components": "^3.5.0",
-    "@tarojs/service": "^3.5.0",
-    "@tarojs/shared": "^3.5.0",
-    "rollup": "^2.29.0",
-    "rollup-plugin-typescript2": "^0.27.3",
-    "typescript": "^4.0.3"
+    "@tarojs/components": "^4.0.0",
+    "@tarojs/service": "^4.0.0",
+    "@tarojs/shared": "^4.0.0",
+    "rollup": "v4.35.0",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.4.5"
   }
 }

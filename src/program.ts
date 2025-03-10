@@ -12,7 +12,8 @@ export default class Kwai extends TaroPlatformBase {
     templ: '.ksml',
     style: '.css',
     config: '.json',
-    script: '.js'
+    script: '.js',
+    xs: '.ks',
   }
 
   template = new Template()
