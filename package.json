@@ -27,16 +27,16 @@
     "url": "https://github.com/NervJS/taro-plugin-platform-kwai/issues"
   },
   "peerDependencies": {
-    "@tarojs/components": "^3.5.0",
-    "@tarojs/service": "^3.5.0",
-    "@tarojs/shared": "^3.5.0"
+    "@tarojs/components": "^4.0.0",
+    "@tarojs/service": "^4.0.0",
+    "@tarojs/shared": "^4.0.0"
   },
   "devDependencies": {
-    "@tarojs/components": "^3.5.0",
-    "@tarojs/service": "^3.5.0",
-    "@tarojs/shared": "^3.5.0",
-    "rollup": "^2.29.0",
+    "@tarojs/components": "^4.0.0",
+    "@tarojs/service": "^4.0.0",
+    "@tarojs/shared": "^4.0.0",
+    "rollup": "^4.16.4",
     "rollup-plugin-typescript2": "^0.27.3",
-    "typescript": "^4.0.3"
+    "typescript": "~5.4.5"
   }
 }
