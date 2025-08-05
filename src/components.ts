@@ -1,4 +1,4 @@
-import { singleQuote } from '@tarojs/shared'
+import { singleQuote } from '@tarojs/shared';
 
 export const components = {
   // ======== 调整属性 ========
@@ -8,7 +8,7 @@ export const components = {
     bindContact: '',
     bindError: '',
     bindOpenSetting: '',
-    bindLaunchApp: '',
+    bindLaunchApp: ''
   },
   Slider: {
     color: singleQuote('#e9e9e9'),
@@ -18,9 +18,9 @@ export const components = {
     type: ''
   },
   Swiper: {
-    'easing-function': singleQuote('default'),
+    'easing-function': singleQuote('default')
   },
   RichText: {
     space: ''
   }
-}
+};
